@@ -15,7 +15,6 @@
   dartVersion,
   patches,
   makeWrapper,
-  gitMinimal,
   which,
   jq,
   unzip,
@@ -41,11 +40,11 @@
   depot_tools,
   wrapGAppsHook3,
   writableTmpDirAsHomeHook,
-  fd,
   cacert,
   moreutils,
   writeTextFile,
   supportedTargetFlutterPlatforms,
+  installShellFiles,
   extraPkgConfigPackages ? [ ],
   extraLibraries ? [ ],
   extraIncludes ? [ ],
@@ -136,6 +135,7 @@ stdenv.mkDerivation (finalAttrs: {
     jq
     unzip
     gnutar
+    installShellFiles
   ]
   ++
     lib.optionals
@@ -316,6 +316,10 @@ stdenv.mkDerivation (finalAttrs: {
     $out/bin/flutter config --android-studio-dir $HOME
     $out/bin/flutter config --android-sdk $HOME
     $out/bin/flutter --version | fgrep --quiet '${builtins.substring 0 10 engineVersion}'
+
+    $out/bin/flutter bash-completion "$TMPDIR/flutter.bash"
+    installShellCompletion --bash "$TMPDIR/flutter.bash"
+    installShellCompletion --zsh "$TMPDIR/flutter.bash"
 
     runHook postInstallCheck
   '';
